@@ -165,4 +165,8 @@ public class SpravceZamestnancu implements Serializable {
     public Map getDatabaze() {
         return databaze;
     }
+
+    public void setDatabaze(Map databaze) {
+        this.databaze = databaze;
+    }
 }

@@ -20,6 +20,8 @@ public class Main {
             System.out.println("6 - Abecedni vypis zamestnancu");
             System.out.println("7 - Statistiky spoluprace");
             System.out.println("8 - Vypis poctu zamestnancu");
+            System.out.println("9 - Ulozit data do textoveho souboru");
+            System.out.println("10 - Nacist data z textoveho souboru");
             System.out.println("0 - Ukoncit program");
             System.out.print("Vase volba: ");
 
@@ -101,8 +103,23 @@ public class Main {
                     spravce.vypisPocetVeSkupinach();
                     break;
 
+                case 9:
+                    System.out.print("Zadejte nazev txt souboru: ");
+                    String nazevUloz = sc.nextLine();
+                    DatabazeUloziste.ulozDoSouboru(spravce, nazevUloz);
+                    break;
+
+                case 10:
+                    System.out.print("Zadejte nazev txt souboru: ");
+                    String nazevNacti = sc.nextLine();
+                    spravce = DatabazeUloziste.nactiZeSouboru(nazevNacti);
+                    break;
+
                 case 0:
                     System.out.println("Program ukoncen. Na shledanou!");
+                    System.out.println("==============================");
+                    System.out.println("Adam Solovic & David Sindelar");
+                    System.out.println("========BPC-PC2T 2026========");
                     bezi = false;
                     break;
 
