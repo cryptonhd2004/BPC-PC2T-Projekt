@@ -1,14 +1,13 @@
-package projekt;
 
+
+package projekt;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 public class SpravceZamestnancu implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     private Map databaze;
@@ -45,7 +44,11 @@ public class SpravceZamestnancu implements Serializable {
             }
 
             Zamestnanec zamestnanec = (Zamestnanec) databaze.get(idZamestnance);
+            Zamestnanec kolega = (Zamestnanec) databaze.get(idKolegy);
+
             zamestnanec.pridejSpolupracovnika(idKolegy, uroven);
+            kolega.pridejSpolupracovnika(idZamestnance, uroven);
+
             System.out.println("Spoluprace uspesne zaevidovana.");
         } else {
             System.out.println("Chyba: Jedno nebo obe zadana ID neexistuji.");
@@ -168,5 +171,9 @@ public class SpravceZamestnancu implements Serializable {
 
     public void setDatabaze(Map databaze) {
         this.databaze = databaze;
+    }
+
+    public void setDalsiId(int dalsiId) {
+        this.dalsiId = dalsiId;
     }
 }
