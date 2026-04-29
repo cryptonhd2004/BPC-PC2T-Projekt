@@ -1,3 +1,5 @@
-2026/04/27-22:01:23.152 770 Reusing MANIFEST C:\Users\Adam\Desktop\Skola\VUT\PC2T\projekt to commit\BPC-PC2T-Projekt\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/MANIFEST-000001
-2026/04/27-22:01:23.155 770 Recovering log #3
-2026/04/27-22:01:23.156 770 Reusing old log C:\Users\Adam\Desktop\Skola\VUT\PC2T\projekt to commit\BPC-PC2T-Projekt\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/000003.log 
+2026/04/29-11:24:18.836 14e0 Log #3: 5 ops saved to Table #4 OK
+2026/04/29-11:24:18.861 14e0 Archiving C:\Users\Adam\Desktop\Skola\VUT\PC2T\BPC-PC2T-Projekt\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/000003.log: OK
+2026/04/29-11:24:18.861 14e0 Table #4: 5 entries OK
+2026/04/29-11:24:18.882 14e0 Archiving C:\Users\Adam\Desktop\Skola\VUT\PC2T\BPC-PC2T-Projekt\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/MANIFEST-000001: OK
+2026/04/29-11:24:18.898 14e0 **** Repaired leveldb C:\Users\Adam\Desktop\Skola\VUT\PC2T\BPC-PC2T-Projekt\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database; recovered 1 files; 235 bytes. Some data may have been lost. ****

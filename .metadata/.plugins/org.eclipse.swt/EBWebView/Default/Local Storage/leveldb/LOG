@@ -1,3 +1,2 @@
-2026/04/28-15:47:35.714 3dfc Reusing MANIFEST C:\Users\Adam\Desktop\Skola\VUT\PC2T\projekt to commit\BPC-PC2T-Projekt\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
-2026/04/28-15:47:35.879 3dfc Recovering log #3
-2026/04/28-15:47:35.923 3dfc Reusing old log C:\Users\Adam\Desktop\Skola\VUT\PC2T\projekt to commit\BPC-PC2T-Projekt\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/000003.log 
+2026/04/29-11:24:19.262 38e0 Creating DB C:\Users\Adam\Desktop\Skola\VUT\PC2T\BPC-PC2T-Projekt\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb since it was missing.
+2026/04/29-11:24:19.301 38e0 Reusing MANIFEST C:\Users\Adam\Desktop\Skola\VUT\PC2T\BPC-PC2T-Projekt\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001

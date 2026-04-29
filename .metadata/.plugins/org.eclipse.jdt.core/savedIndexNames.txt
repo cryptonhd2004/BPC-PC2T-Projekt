@@ -1,1 +1,0 @@
-INDEX VERSION 1.134+C:\Users\Adam\Desktop\Skola\VUT\PC2T\projekt to commit\BPC-PC2T-Projekt\.metadata\.plugins\org.eclipse.jdt.core
