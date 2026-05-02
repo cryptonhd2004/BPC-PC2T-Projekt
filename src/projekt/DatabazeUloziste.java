@@ -12,9 +12,7 @@ public class DatabazeUloziste {
     public static void ulozDoSouboru(SpravceZamestnancu spravce, String nazevSouboru) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nazevSouboru))) {
 
-            for (Object objekt : spravce.getDatabaze().values()) {
-                Zamestnanec z = (Zamestnanec) objekt;
-
+            for (Zamestnanec z : spravce.getDatabaze().values()) {
                 String typ = "SPECIALISTA";
                 if (z instanceof DatovyAnalytik) {
                     typ = "ANALYTIK";
@@ -23,8 +21,7 @@ public class DatabazeUloziste {
                 writer.write("ZAMESTNANEC;" + z.getId() + ";" + typ + ";" + z.getJmeno() + ";" + z.getPrijmeni() + ";" + z.getRokNarozeni());
                 writer.newLine();
 
-                for (Object vazbaObj : z.getSeznamSpolupracovniku().entrySet()) {
-                    Map.Entry vazba = (Map.Entry) vazbaObj;
+                for (Map.Entry<Integer, UrovenSpoluprace> vazba : z.getSeznamSpolupracovniku().entrySet()) {
                     writer.write("SPOLUPRACE;" + z.getId() + ";" + vazba.getKey() + ";" + vazba.getValue());
                     writer.newLine();
                 }
@@ -38,7 +35,8 @@ public class DatabazeUloziste {
 
     public static SpravceZamestnancu nactiZeSouboru(String nazevSouboru) {
         SpravceZamestnancu spravce = new SpravceZamestnancu();
-        Map docasnaDatabaze = new TreeMap();
+        Map<Integer, Zamestnanec> docasnaDatabaze = new TreeMap<>();
+        int maxId = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(nazevSouboru))) {
             String radek;
@@ -61,12 +59,16 @@ public class DatabazeUloziste {
                     }
 
                     docasnaDatabaze.put(id, novy);
+
+                    if (id > maxId) {
+                        maxId = id;
+                    }
                 } else if (casti[0].equals("SPOLUPRACE")) {
                     int idZamestnance = Integer.parseInt(casti[1]);
                     int idKolegy = Integer.parseInt(casti[2]);
                     UrovenSpoluprace uroven = UrovenSpoluprace.valueOf(casti[3]);
 
-                    Zamestnanec z = (Zamestnanec) docasnaDatabaze.get(idZamestnance);
+                    Zamestnanec z = docasnaDatabaze.get(idZamestnance);
                     if (z != null) {
                         z.pridejSpolupracovnika(idKolegy, uroven);
                     }
@@ -74,6 +76,7 @@ public class DatabazeUloziste {
             }
 
             spravce.setDatabaze(docasnaDatabaze);
+            spravce.setDalsiId(maxId + 1);
             System.out.println("Data uspesne nactena z textoveho souboru.");
         } catch (Exception e) {
             System.out.println("Chyba pri nacitani ze souboru: " + e.getMessage());

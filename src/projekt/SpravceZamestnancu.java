@@ -1,16 +1,17 @@
-
-
 package projekt;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
 public class SpravceZamestnancu implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
-    private Map databaze;
+    private Map<Integer, Zamestnanec> databaze;
     private int dalsiId;
 
     public SpravceZamestnancu() {
@@ -43,8 +44,8 @@ public class SpravceZamestnancu implements Serializable {
                 return;
             }
 
-            Zamestnanec zamestnanec = (Zamestnanec) databaze.get(idZamestnance);
-            Zamestnanec kolega = (Zamestnanec) databaze.get(idKolegy);
+            Zamestnanec zamestnanec = databaze.get(idZamestnance);
+            Zamestnanec kolega = databaze.get(idKolegy);
 
             zamestnanec.pridejSpolupracovnika(idKolegy, uroven);
             kolega.pridejSpolupracovnika(idZamestnance, uroven);
@@ -57,8 +58,7 @@ public class SpravceZamestnancu implements Serializable {
 
     public void odeberZamestnance(int id) {
         if (databaze.remove(id) != null) {
-            for (Object objekt : databaze.values()) {
-                Zamestnanec z = (Zamestnanec) objekt;
+            for (Zamestnanec z : databaze.values()) {
                 z.odeberSpolupracovnika(id);
             }
             System.out.println("Zamestnanec a vsechny jeho vazby byly uspesne odstraneny.");
@@ -68,15 +68,14 @@ public class SpravceZamestnancu implements Serializable {
     }
 
     public Zamestnanec najdiZamestnance(int id) {
-        return (Zamestnanec) databaze.get(id);
+        return databaze.get(id);
     }
 
     public void vypisAbecednePodleSkupin() {
-        List analytici = new ArrayList();
-        List specialisti = new ArrayList();
+        List<Zamestnanec> analytici = new ArrayList<>();
+        List<Zamestnanec> specialisti = new ArrayList<>();
 
-        for (Object objekt : databaze.values()) {
-            Zamestnanec z = (Zamestnanec) objekt;
+        for (Zamestnanec z : databaze.values()) {
             if (z instanceof DatovyAnalytik) {
                 analytici.add(z);
             } else if (z instanceof BezpecnostniSpecialista) {
@@ -84,19 +83,17 @@ public class SpravceZamestnancu implements Serializable {
             }
         }
 
-        Comparator podlePrijmeni = Comparator.comparing(o -> ((Zamestnanec) o).getPrijmeni());
+        Comparator<Zamestnanec> podlePrijmeni = Comparator.comparing(Zamestnanec::getPrijmeni);
         analytici.sort(podlePrijmeni);
         specialisti.sort(podlePrijmeni);
 
         System.out.println("\n--- DATOVI ANALYTICI ---");
-        for (Object objekt : analytici) {
-            Zamestnanec z = (Zamestnanec) objekt;
+        for (Zamestnanec z : analytici) {
             System.out.println(z.getPrijmeni() + " " + z.getJmeno() + " (ID: " + z.getId() + ")");
         }
 
         System.out.println("\n--- BEZPECNOSTNI SPECIALISTE ---");
-        for (Object objekt : specialisti) {
-            Zamestnanec z = (Zamestnanec) objekt;
+        for (Zamestnanec z : specialisti) {
             System.out.println(z.getPrijmeni() + " " + z.getJmeno() + " (ID: " + z.getId() + ")");
         }
     }
@@ -114,11 +111,8 @@ public class SpravceZamestnancu implements Serializable {
         Zamestnanec nejviceVazeb = null;
         int maxVazeb = -1;
 
-        for (Object objekt : databaze.values()) {
-            Zamestnanec z = (Zamestnanec) objekt;
-
-            for (Object urovenObj : z.getSeznamSpolupracovniku().values()) {
-                UrovenSpoluprace u = (UrovenSpoluprace) urovenObj;
+        for (Zamestnanec z : databaze.values()) {
+            for (UrovenSpoluprace u : z.getSeznamSpolupracovniku().values()) {
                 if (u == UrovenSpoluprace.SPATNA) {
                     spatna++;
                 } else if (u == UrovenSpoluprace.PRUMERNA) {
@@ -150,8 +144,7 @@ public class SpravceZamestnancu implements Serializable {
         int analytici = 0;
         int specialisti = 0;
 
-        for (Object objekt : databaze.values()) {
-            Zamestnanec z = (Zamestnanec) objekt;
+        for (Zamestnanec z : databaze.values()) {
             if (z instanceof DatovyAnalytik) {
                 analytici++;
             } else if (z instanceof BezpecnostniSpecialista) {
@@ -165,11 +158,11 @@ public class SpravceZamestnancu implements Serializable {
         System.out.println("Celkem ve firme: " + (analytici + specialisti));
     }
 
-    public Map getDatabaze() {
+    public Map<Integer, Zamestnanec> getDatabaze() {
         return databaze;
     }
 
-    public void setDatabaze(Map databaze) {
+    public void setDatabaze(Map<Integer, Zamestnanec> databaze) {
         this.databaze = databaze;
     }
 

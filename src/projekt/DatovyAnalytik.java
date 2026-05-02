@@ -11,21 +11,19 @@ public class DatovyAnalytik extends Zamestnanec {
     }
 
     @Override
-    public void spustDovednost(Map vsiZamestnanci) {
+    public void spustDovednost(Map<Integer, Zamestnanec> vsiZamestnanci) {
         System.out.println("--- Dovednost: Datovy Analytik (" + jmeno + ") ---");
 
         int maxSpolecnych = -1;
         int idNejKolegy = -1;
 
-        for (Object mojeVazbaIdObj : seznamSpolupracovniku.keySet()) {
-            Integer mojeVazbaId = (Integer) mojeVazbaIdObj;
-            Zamestnanec kolega = (Zamestnanec) vsiZamestnanci.get(mojeVazbaId);
+        for (Integer mojeVazbaId : seznamSpolupracovniku.keySet()) {
+            Zamestnanec kolega = vsiZamestnanci.get(mojeVazbaId);
 
             if (kolega != null) {
                 int spolecnych = 0;
 
-                for (Object idJehoVazbyObj : kolega.getSeznamSpolupracovniku().keySet()) {
-                    Integer idJehoVazby = (Integer) idJehoVazbyObj;
+                for (Integer idJehoVazby : kolega.getSeznamSpolupracovniku().keySet()) {
                     if (this.seznamSpolupracovniku.containsKey(idJehoVazby)) {
                         spolecnych++;
                     }
@@ -39,7 +37,7 @@ public class DatovyAnalytik extends Zamestnanec {
         }
 
         if (idNejKolegy != -1 && maxSpolecnych > 0) {
-            Zamestnanec top = (Zamestnanec) vsiZamestnanci.get(idNejKolegy);
+            Zamestnanec top = vsiZamestnanci.get(idNejKolegy);
             System.out.println("Nejvice spolecnych spolupracovniku mate s: "
                     + top.getJmeno() + " " + top.getPrijmeni());
         } else {

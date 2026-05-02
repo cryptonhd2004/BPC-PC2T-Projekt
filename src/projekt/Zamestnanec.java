@@ -12,7 +12,7 @@ public abstract class Zamestnanec implements Serializable {
     protected String jmeno;
     protected String prijmeni;
     protected int rokNarozeni;
-    protected Map seznamSpolupracovniku;
+    protected Map<Integer, UrovenSpoluprace> seznamSpolupracovniku;
 
     public Zamestnanec(int id, String jmeno, String prijmeni, int rokNarozeni) {
         this.id = id;
@@ -22,7 +22,7 @@ public abstract class Zamestnanec implements Serializable {
         this.seznamSpolupracovniku = new HashMap<>();
     }
 
-    public abstract void spustDovednost(Map vsiZamestnanci);
+    public abstract void spustDovednost(Map<Integer, Zamestnanec> vsiZamestnanci);
 
     public void pridejSpolupracovnika(int idKolegy, UrovenSpoluprace uroven) {
         seznamSpolupracovniku.put(idKolegy, uroven);
@@ -48,7 +48,7 @@ public abstract class Zamestnanec implements Serializable {
         return rokNarozeni;
     }
 
-    public Map getSeznamSpolupracovniku() {
+    public Map<Integer, UrovenSpoluprace> getSeznamSpolupracovniku() {
         return seznamSpolupracovniku;
     }
 

@@ -11,7 +11,7 @@ public class BezpecnostniSpecialista extends Zamestnanec {
     }
 
     @Override
-    public void spustDovednost(Map vsiZamestnanci) {
+    public void spustDovednost(Map<Integer, Zamestnanec> vsiZamestnanci) {
         System.out.println("--- Dovednost: Bezpecnostni specialista (" + jmeno + ") ---");
 
         if (seznamSpolupracovniku.isEmpty()) {
@@ -21,9 +21,7 @@ public class BezpecnostniSpecialista extends Zamestnanec {
 
         double skore = 0;
 
-        for (Object urovenObj : seznamSpolupracovniku.values()) {
-            UrovenSpoluprace uroven = (UrovenSpoluprace) urovenObj;
-
+        for (UrovenSpoluprace uroven : seznamSpolupracovniku.values()) {
             switch (uroven) {
                 case SPATNA:
                     skore += 10;
