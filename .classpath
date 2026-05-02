@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+			<attribute name="limit-modules" value="java.smartcardio,jdk.accessibility,jdk.dynalink,jdk.httpserver,jdk.jartool,jdk.javadoc,jdk.jconsole,jdk.jshell,jdk.jsobject,jdk.management.jfr,jdk.net,jdk.nio.mapmode,jdk.sctp,jdk.security.auth,jdk.security.jgss,jdk.unsupported,jdk.unsupported.desktop,jdk.xml.dom,jdk.charsets,jdk.hotspot.agent,jdk.jstatd,jdk.jcmd,jdk.crypto.cryptoki,jdk.random,java.se,jdk.naming.rmi,jdk.crypto.mscapi,jdk.editpad,jdk.internal.vm.compiler,jdk.internal.vm.compiler.management,jdk.jdeps,jdk.naming.dns,jdk.localedata"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Dejvík/OneDrive - VUT/BPC-TLI2/bpc-pc2t/projekt/BPC-PC2T-Projekt/sqlite-jdbc-3.53.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

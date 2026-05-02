@@ -4,10 +4,17 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class DatabazeUloziste {
+
+    private static final String URL_DATABAZE = "jdbc:sqlite:firemni_databaze.db";
 
     public static void ulozDoSouboru(SpravceZamestnancu spravce, String nazevSouboru) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nazevSouboru))) {
@@ -30,6 +37,7 @@ public class DatabazeUloziste {
             System.out.println("Data uspesne ulozena do textoveho souboru.");
         } catch (Exception e) {
             System.out.println("Chyba pri ukladani do souboru: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -80,6 +88,107 @@ public class DatabazeUloziste {
             System.out.println("Data uspesne nactena z textoveho souboru.");
         } catch (Exception e) {
             System.out.println("Chyba pri nacitani ze souboru: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return spravce;
+    }
+
+    public static void ulozDoSql(SpravceZamestnancu spravce) {
+        try {
+            Class.forName("org.sqlite.JDBC");
+
+            try (Connection conn = DriverManager.getConnection(URL_DATABAZE);
+                 Statement stmt = conn.createStatement()) {
+
+                stmt.execute("CREATE TABLE IF NOT EXISTS zamestnanci (id INTEGER PRIMARY KEY, typ INTEGER, jmeno TEXT, prijmeni TEXT, rok_narozeni INTEGER)");
+                stmt.execute("CREATE TABLE IF NOT EXISTS spoluprace (id_zamestnance INTEGER, id_kolegy INTEGER, uroven TEXT)");
+
+                stmt.execute("DELETE FROM zamestnanci");
+                stmt.execute("DELETE FROM spoluprace");
+
+                try (PreparedStatement insertZam = conn.prepareStatement(
+                        "INSERT INTO zamestnanci (id, typ, jmeno, prijmeni, rok_narozeni) VALUES (?, ?, ?, ?, ?)");
+                     PreparedStatement insertSpol = conn.prepareStatement(
+                        "INSERT INTO spoluprace (id_zamestnance, id_kolegy, uroven) VALUES (?, ?, ?)")) {
+
+                    for (Zamestnanec z : spravce.getDatabaze().values()) {
+                        insertZam.setInt(1, z.getId());
+                        insertZam.setInt(2, (z instanceof DatovyAnalytik) ? 1 : 2);
+                        insertZam.setString(3, z.getJmeno());
+                        insertZam.setString(4, z.getPrijmeni());
+                        insertZam.setInt(5, z.getRokNarozeni());
+                        insertZam.executeUpdate();
+
+                        for (Map.Entry<Integer, UrovenSpoluprace> vazba : z.getSeznamSpolupracovniku().entrySet()) {
+                            insertSpol.setInt(1, z.getId());
+                            insertSpol.setInt(2, vazba.getKey());
+                            insertSpol.setString(3, vazba.getValue().name());
+                            insertSpol.executeUpdate();
+                        }
+                    }
+                }
+
+                System.out.println("Data byla uspesne zalohovana do SQL databaze.");
+            }
+        } catch (Exception e) {
+            System.out.println("Chyba SQL ukladani: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static SpravceZamestnancu nactiZSql() {
+        SpravceZamestnancu spravce = new SpravceZamestnancu();
+        int maxId = 0;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+
+            try (Connection conn = DriverManager.getConnection(URL_DATABAZE);
+                 Statement stmt = conn.createStatement()) {
+
+                stmt.execute("CREATE TABLE IF NOT EXISTS zamestnanci (id INTEGER PRIMARY KEY, typ INTEGER, jmeno TEXT, prijmeni TEXT, rok_narozeni INTEGER)");
+                stmt.execute("CREATE TABLE IF NOT EXISTS spoluprace (id_zamestnance INTEGER, id_kolegy INTEGER, uroven TEXT)");
+
+                try (ResultSet rsZam = stmt.executeQuery("SELECT * FROM zamestnanci")) {
+                    while (rsZam.next()) {
+                        int id = rsZam.getInt("id");
+                        int typ = rsZam.getInt("typ");
+                        String jmeno = rsZam.getString("jmeno");
+                        String prijmeni = rsZam.getString("prijmeni");
+                        int rok = rsZam.getInt("rok_narozeni");
+
+                        Zamestnanec novy = (typ == 1)
+                                ? new DatovyAnalytik(id, jmeno, prijmeni, rok)
+                                : new BezpecnostniSpecialista(id, jmeno, prijmeni, rok);
+
+                        spravce.getDatabaze().put(id, novy);
+
+                        if (id > maxId) {
+                            maxId = id;
+                        }
+                    }
+                }
+
+                try (ResultSet rsSpol = stmt.executeQuery("SELECT * FROM spoluprace")) {
+                    while (rsSpol.next()) {
+                        int idZamestnance = rsSpol.getInt("id_zamestnance");
+                        int idKolegy = rsSpol.getInt("id_kolegy");
+                        UrovenSpoluprace uroven = UrovenSpoluprace.valueOf(rsSpol.getString("uroven"));
+
+                        Zamestnanec z = spravce.getDatabaze().get(idZamestnance);
+                        if (z != null) {
+                            z.pridejSpolupracovnika(idKolegy, uroven);
+                        }
+                    }
+                }
+
+                spravce.setDalsiId(maxId + 1);
+                System.out.println("Data uspesne obnovena z SQL databaze.");
+            }
+        } catch (Exception e) {
+            System.out.println("SQL databaze zatim neexistuje nebo se nepodarilo nacist zalohu.");
+            e.printStackTrace();
         }
 
         return spravce;

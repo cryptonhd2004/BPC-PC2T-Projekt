@@ -6,7 +6,8 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        SpravceZamestnancu spravce = new SpravceZamestnancu();
+        System.out.println("Startuji system...");
+        SpravceZamestnancu spravce = DatabazeUloziste.nactiZSql();
 
         boolean bezi = true;
 
@@ -116,6 +117,8 @@ public class Main {
                     break;
 
                 case 0:
+                    System.out.println("Ukladam data do SQL databaze...");
+                    DatabazeUloziste.ulozDoSql(spravce);
                     System.out.println("Program ukoncen. Na shledanou!");
                     System.out.println("==============================");
                     System.out.println("Adam Solovic & David Sindelar");
