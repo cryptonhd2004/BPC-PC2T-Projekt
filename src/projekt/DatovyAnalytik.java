@@ -44,4 +44,9 @@ public class DatovyAnalytik extends Zamestnanec {
             System.out.println("Nemate zadne spolecne spolupracovniky.");
         }
     }
+
+    @Override
+    public String getNazevSkupiny() {
+        return "Datovy analytik";
+    }
 }

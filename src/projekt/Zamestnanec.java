@@ -24,6 +24,8 @@ public abstract class Zamestnanec implements Serializable {
 
     public abstract void spustDovednost(Map<Integer, Zamestnanec> vsiZamestnanci);
 
+    public abstract String getNazevSkupiny();
+
     public void pridejSpolupracovnika(int idKolegy, UrovenSpoluprace uroven) {
         seznamSpolupracovniku.put(idKolegy, uroven);
     }
@@ -92,6 +94,7 @@ public abstract class Zamestnanec implements Serializable {
         StringBuilder sb = new StringBuilder();
 
         sb.append("ID: ").append(id).append("\n");
+        sb.append("Skupina: ").append(getNazevSkupiny()).append("\n");
         sb.append("Jmeno: ").append(jmeno).append("\n");
         sb.append("Prijmeni: ").append(prijmeni).append("\n");
         sb.append("Rok narozeni: ").append(rokNarozeni).append("\n");

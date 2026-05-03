@@ -38,4 +38,9 @@ public class BezpecnostniSpecialista extends Zamestnanec {
         double vysledneRiziko = skore * seznamSpolupracovniku.size();
         System.out.println("Vypocitane rizikove skore spoluprace: " + vysledneRiziko);
     }
+
+    @Override
+    public String getNazevSkupiny() {
+        return "Bezpecnostni specialista";
+    }
 }
