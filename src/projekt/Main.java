@@ -76,7 +76,8 @@ public class Main {
                     System.out.print("Zadejte ID zamestnance: ");
                     Zamestnanec z = spravce.najdiZamestnance(sc.nextInt());
                     if (z != null) {
-                        System.out.println(z);
+                        System.out.println("\n--- DETAIL ZAMESTNANCE ---");
+                        System.out.println(z.getDetailniVypis());
                     } else {
                         System.out.println("Zamestnanec nenalezen.");
                     }

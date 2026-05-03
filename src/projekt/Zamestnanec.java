@@ -32,6 +32,78 @@ public abstract class Zamestnanec implements Serializable {
         seznamSpolupracovniku.remove(idKolegy);
     }
 
+    public int getPocetSpatnychSpolupraci() {
+        int pocet = 0;
+
+        for (UrovenSpoluprace uroven : seznamSpolupracovniku.values()) {
+            if (uroven == UrovenSpoluprace.SPATNA) {
+                pocet++;
+            }
+        }
+
+        return pocet;
+    }
+
+    public int getPocetPrumernychSpolupraci() {
+        int pocet = 0;
+
+        for (UrovenSpoluprace uroven : seznamSpolupracovniku.values()) {
+            if (uroven == UrovenSpoluprace.PRUMERNA) {
+                pocet++;
+            }
+        }
+
+        return pocet;
+    }
+
+    public int getPocetDobrychSpolupraci() {
+        int pocet = 0;
+
+        for (UrovenSpoluprace uroven : seznamSpolupracovniku.values()) {
+            if (uroven == UrovenSpoluprace.DOBRA) {
+                pocet++;
+            }
+        }
+
+        return pocet;
+    }
+
+    public String getPrevladajiciKvalitaSpoluprace() {
+        int spatna = getPocetSpatnychSpolupraci();
+        int prumerna = getPocetPrumernychSpolupraci();
+        int dobra = getPocetDobrychSpolupraci();
+
+        if (seznamSpolupracovniku.isEmpty()) {
+            return "zadna";
+        }
+
+        if (spatna >= prumerna && spatna >= dobra) {
+            return "spatna";
+        }
+
+        if (prumerna >= spatna && prumerna >= dobra) {
+            return "prumerna";
+        }
+
+        return "dobra";
+    }
+
+    public String getDetailniVypis() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("ID: ").append(id).append("\n");
+        sb.append("Jmeno: ").append(jmeno).append("\n");
+        sb.append("Prijmeni: ").append(prijmeni).append("\n");
+        sb.append("Rok narozeni: ").append(rokNarozeni).append("\n");
+        sb.append("Pocet spolupracovniku: ").append(seznamSpolupracovniku.size()).append("\n");
+        sb.append("Spatna spoluprace: ").append(getPocetSpatnychSpolupraci()).append("\n");
+        sb.append("Prumerna spoluprace: ").append(getPocetPrumernychSpolupraci()).append("\n");
+        sb.append("Dobra spoluprace: ").append(getPocetDobrychSpolupraci()).append("\n");
+        sb.append("Prevladajici kvalita: ").append(getPrevladajiciKvalitaSpoluprace());
+
+        return sb.toString();
+    }
+
     public int getId() {
         return id;
     }
