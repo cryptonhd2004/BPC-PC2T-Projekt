@@ -9,7 +9,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class DatabazeUloziste {
@@ -119,12 +121,28 @@ public class DatabazeUloziste {
                         insertZam.setString(4, z.getPrijmeni());
                         insertZam.setInt(5, z.getRokNarozeni());
                         insertZam.executeUpdate();
+                    }
 
+                    Set<String> ulozeneVazby = new HashSet<>();
+
+                    for (Zamestnanec z : spravce.getDatabaze().values()) {
                         for (Map.Entry<Integer, UrovenSpoluprace> vazba : z.getSeznamSpolupracovniku().entrySet()) {
-                            insertSpol.setInt(1, z.getId());
-                            insertSpol.setInt(2, vazba.getKey());
-                            insertSpol.setString(3, vazba.getValue().name());
-                            insertSpol.executeUpdate();
+                            int id1 = z.getId();
+                            int id2 = vazba.getKey();
+
+                            int mensi = Math.min(id1, id2);
+                            int vetsi = Math.max(id1, id2);
+
+                            String klic = mensi + "-" + vetsi;
+
+                            if (!ulozeneVazby.contains(klic)) {
+                                insertSpol.setInt(1, mensi);
+                                insertSpol.setInt(2, vetsi);
+                                insertSpol.setString(3, vazba.getValue().name());
+                                insertSpol.executeUpdate();
+
+                                ulozeneVazby.add(klic);
+                            }
                         }
                     }
                 }
@@ -176,9 +194,12 @@ public class DatabazeUloziste {
                         int idKolegy = rsSpol.getInt("id_kolegy");
                         UrovenSpoluprace uroven = UrovenSpoluprace.valueOf(rsSpol.getString("uroven"));
 
-                        Zamestnanec z = spravce.getDatabaze().get(idZamestnance);
-                        if (z != null) {
-                            z.pridejSpolupracovnika(idKolegy, uroven);
+                        Zamestnanec z1 = spravce.getDatabaze().get(idZamestnance);
+                        Zamestnanec z2 = spravce.getDatabaze().get(idKolegy);
+
+                        if (z1 != null && z2 != null) {
+                            z1.pridejSpolupracovnika(idKolegy, uroven);
+                            z2.pridejSpolupracovnika(idZamestnance, uroven);
                         }
                     }
                 }
