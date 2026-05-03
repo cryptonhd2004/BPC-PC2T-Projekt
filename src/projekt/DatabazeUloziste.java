@@ -47,41 +47,81 @@ public class DatabazeUloziste {
         SpravceZamestnancu spravce = new SpravceZamestnancu();
         Map<Integer, Zamestnanec> docasnaDatabaze = new TreeMap<>();
         int maxId = 0;
+        int cisloRadku = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(nazevSouboru))) {
             String radek;
 
             while ((radek = reader.readLine()) != null) {
+                cisloRadku++;
+
+                if (radek.trim().isEmpty()) {
+                    continue;
+                }
+
                 String[] casti = radek.split(";");
 
-                if (casti[0].equals("ZAMESTNANEC")) {
-                    int id = Integer.parseInt(casti[1]);
-                    String typ = casti[2];
-                    String jmeno = casti[3];
-                    String prijmeni = casti[4];
-                    int rokNarozeni = Integer.parseInt(casti[5]);
-
-                    Zamestnanec novy;
-                    if (typ.equals("ANALYTIK")) {
-                        novy = new DatovyAnalytik(id, jmeno, prijmeni, rokNarozeni);
-                    } else {
-                        novy = new BezpecnostniSpecialista(id, jmeno, prijmeni, rokNarozeni);
+                try {
+                    if (casti.length == 0) {
+                        continue;
                     }
 
-                    docasnaDatabaze.put(id, novy);
+                    if (casti[0].equals("ZAMESTNANEC")) {
+                        if (casti.length != 6) {
+                            System.out.println("Preskakuji neplatny radek " + cisloRadku + ": spatny pocet polozek pro ZAMESTNANEC.");
+                            continue;
+                        }
 
-                    if (id > maxId) {
-                        maxId = id;
-                    }
-                } else if (casti[0].equals("SPOLUPRACE")) {
-                    int idZamestnance = Integer.parseInt(casti[1]);
-                    int idKolegy = Integer.parseInt(casti[2]);
-                    UrovenSpoluprace uroven = UrovenSpoluprace.valueOf(casti[3]);
+                        int id = Integer.parseInt(casti[1]);
+                        String typ = casti[2];
+                        String jmeno = casti[3];
+                        String prijmeni = casti[4];
+                        int rokNarozeni = Integer.parseInt(casti[5]);
 
-                    Zamestnanec z = docasnaDatabaze.get(idZamestnance);
-                    if (z != null) {
+                        if (!typ.equals("ANALYTIK") && !typ.equals("SPECIALISTA")) {
+                            System.out.println("Preskakuji neplatny radek " + cisloRadku + ": neznamy typ zamestnance.");
+                            continue;
+                        }
+
+                        if (docasnaDatabaze.containsKey(id)) {
+                            System.out.println("Preskakuji neplatny radek " + cisloRadku + ": duplicitni ID zamestnance.");
+                            continue;
+                        }
+
+                        Zamestnanec novy;
+                        if (typ.equals("ANALYTIK")) {
+                            novy = new DatovyAnalytik(id, jmeno, prijmeni, rokNarozeni);
+                        } else {
+                            novy = new BezpecnostniSpecialista(id, jmeno, prijmeni, rokNarozeni);
+                        }
+
+                        docasnaDatabaze.put(id, novy);
+
+                        if (id > maxId) {
+                            maxId = id;
+                        }
+                    } else if (casti[0].equals("SPOLUPRACE")) {
+                        if (casti.length != 4) {
+                            System.out.println("Preskakuji neplatny radek " + cisloRadku + ": spatny pocet polozek pro SPOLUPRACE.");
+                            continue;
+                        }
+
+                        int idZamestnance = Integer.parseInt(casti[1]);
+                        int idKolegy = Integer.parseInt(casti[2]);
+                        UrovenSpoluprace uroven = UrovenSpoluprace.valueOf(casti[3]);
+
+                        Zamestnanec z = docasnaDatabaze.get(idZamestnance);
+                        if (z == null) {
+                            System.out.println("Preskakuji neplatny radek " + cisloRadku + ": zamestnanec pro spolupraci neexistuje.");
+                            continue;
+                        }
+
                         z.pridejSpolupracovnika(idKolegy, uroven);
+                    } else {
+                        System.out.println("Preskakuji neplatny radek " + cisloRadku + ": neznamy typ zaznamu.");
                     }
+                } catch (Exception e) {
+                    System.out.println("Preskakuji neplatny radek " + cisloRadku + ": " + e.getMessage());
                 }
             }
 
