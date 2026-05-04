@@ -90,6 +90,19 @@ public abstract class Zamestnanec implements Serializable {
         return "dobra";
     }
 
+    public String getNazevUrovne(UrovenSpoluprace uroven) {
+        switch (uroven) {
+            case SPATNA:
+                return "spatna";
+            case PRUMERNA:
+                return "prumerna";
+            case DOBRA:
+                return "dobra";
+            default:
+                return "neznamy";
+        }
+    }
+
     public String getDetailniVypis() {
         StringBuilder sb = new StringBuilder();
 
@@ -102,7 +115,20 @@ public abstract class Zamestnanec implements Serializable {
         sb.append("Spatna spoluprace: ").append(getPocetSpatnychSpolupraci()).append("\n");
         sb.append("Prumerna spoluprace: ").append(getPocetPrumernychSpolupraci()).append("\n");
         sb.append("Dobra spoluprace: ").append(getPocetDobrychSpolupraci()).append("\n");
-        sb.append("Prevladajici kvalita: ").append(getPrevladajiciKvalitaSpoluprace());
+        sb.append("Prevladajici kvalita: ").append(getPrevladajiciKvalitaSpoluprace()).append("\n");
+
+        sb.append("Spolupracovnici:");
+        if (seznamSpolupracovniku.isEmpty()) {
+            sb.append(" zadni");
+        } else {
+            for (Map.Entry<Integer, UrovenSpoluprace> entry : seznamSpolupracovniku.entrySet()) {
+                sb.append("\n - ID ")
+                  .append(entry.getKey())
+                  .append(" (")
+                  .append(getNazevUrovne(entry.getValue()))
+                  .append(")");
+            }
+        }
 
         return sb.toString();
     }
