@@ -6,6 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+
         System.out.println("Startuji system...");
         SpravceZamestnancu spravce = DatabazeUloziste.nactiZSql();
 
@@ -21,9 +22,9 @@ public class Main {
             System.out.println("6 - Abecedni vypis zamestnancu");
             System.out.println("7 - Statistiky spoluprace");
             System.out.println("8 - Vypis poctu zamestnancu");
-            System.out.println("9 - Ulozit data do textoveho souboru");
-            System.out.println("10 - Nacist data z textoveho souboru");
-            System.out.println("0 - Ukoncit program");
+            System.out.println("9 - Ulozit data do lokalniho souboru (.dat)");
+            System.out.println("10 - Nacist data z lokalniho souboru (.dat)");
+            System.out.println("0 - Ukoncit program a ulozit do SQL");
             System.out.print("Vase volba: ");
 
             int volba = sc.nextInt();
@@ -106,13 +107,13 @@ public class Main {
                     break;
 
                 case 9:
-                    System.out.print("Zadejte nazev txt souboru: ");
+                    System.out.print("Zadejte nazev souboru (napriklad zaloha.dat): ");
                     String nazevUloz = sc.nextLine();
                     DatabazeUloziste.ulozDoSouboru(spravce, nazevUloz);
                     break;
 
                 case 10:
-                    System.out.print("Zadejte nazev txt souboru: ");
+                    System.out.print("Zadejte nazev souboru (napriklad zaloha.dat): ");
                     String nazevNacti = sc.nextLine();
                     spravce = DatabazeUloziste.nactiZeSouboru(nazevNacti);
                     break;

@@ -38,22 +38,23 @@ public class SpravceZamestnancu implements Serializable {
     }
 
     public void pridejSpolupraci(int idZamestnance, int idKolegy, UrovenSpoluprace uroven) {
-        if (databaze.containsKey(idZamestnance) && databaze.containsKey(idKolegy)) {
-            if (idZamestnance == idKolegy) {
-                System.out.println("Chyba: Zamestnanec nemuze spolupracovat sam se sebou.");
-                return;
-            }
-
-            Zamestnanec zamestnanec = databaze.get(idZamestnance);
-            Zamestnanec kolega = databaze.get(idKolegy);
-
-            zamestnanec.pridejSpolupracovnika(idKolegy, uroven);
-            kolega.pridejSpolupracovnika(idZamestnance, uroven);
-
-            System.out.println("Spoluprace uspesne zaevidovana.");
-        } else {
+        if (!databaze.containsKey(idZamestnance) || !databaze.containsKey(idKolegy)) {
             System.out.println("Chyba: Jedno nebo obe zadana ID neexistuji.");
+            return;
         }
+
+        if (idZamestnance == idKolegy) {
+            System.out.println("Chyba: Zamestnanec nemuze spolupracovat sam se sebou.");
+            return;
+        }
+
+        Zamestnanec prvni = databaze.get(idZamestnance);
+        Zamestnanec druhy = databaze.get(idKolegy);
+
+        prvni.pridejSpolupracovnika(idKolegy, uroven);
+        druhy.pridejSpolupracovnika(idZamestnance, uroven);
+
+        System.out.println("Spoluprace uspesne zaevidovana.");
     }
 
     public void odeberZamestnance(int id) {
@@ -129,14 +130,25 @@ public class SpravceZamestnancu implements Serializable {
             }
         }
 
+        String prevladajici;
+        if (spatna >= prumerna && spatna >= dobra) {
+            prevladajici = "spatna";
+        } else if (prumerna >= spatna && prumerna >= dobra) {
+            prevladajici = "prumerna";
+        } else {
+            prevladajici = "dobra";
+        }
+
         System.out.println("\n--- STATISTIKY SPOLUPRACE ---");
-        System.out.println("Spatnych: " + spatna);
-        System.out.println("Prumernych: " + prumerna);
-        System.out.println("Dobrych: " + dobra);
+        System.out.println("Prehled vsech evidovanych spolupraci:");
+        System.out.println("- Spatnych: " + spatna);
+        System.out.println("- Prumernych: " + prumerna);
+        System.out.println("- Dobrych: " + dobra);
+        System.out.println("Prevladajici kvalita spoluprace: " + prevladajici);
 
         if (nejviceVazeb != null) {
-            System.out.println("Nejvice vazeb ma: " + nejviceVazeb.getJmeno() + " "
-                    + nejviceVazeb.getPrijmeni() + " (" + maxVazeb + ")");
+            System.out.println("\nZamestnanec s nejvice vazbami:");
+            System.out.println("-> " + nejviceVazeb.getJmeno() + " " + nejviceVazeb.getPrijmeni() + " (" + maxVazeb + " vazeb)");
         }
     }
 
@@ -162,11 +174,8 @@ public class SpravceZamestnancu implements Serializable {
         return databaze;
     }
 
-    public void setDatabaze(Map<Integer, Zamestnanec> databaze) {
-        this.databaze = databaze;
-    }
-
-    public void setDalsiId(int dalsiId) {
-        this.dalsiId = dalsiId;
+    public void setDatabaze(Map<Integer, Zamestnanec> nactenaDatabaze, int nacteneDalsiId) {
+        this.databaze = nactenaDatabaze;
+        this.dalsiId = nacteneDalsiId;
     }
 }

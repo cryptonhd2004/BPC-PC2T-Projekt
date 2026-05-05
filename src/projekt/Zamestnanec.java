@@ -24,7 +24,12 @@ public abstract class Zamestnanec implements Serializable {
 
     public abstract void spustDovednost(Map<Integer, Zamestnanec> vsiZamestnanci);
 
-    public abstract String getNazevSkupiny();
+    public String getNazevSkupiny() {
+        if (this instanceof DatovyAnalytik) {
+            return "Datovy analytik";
+        }
+        return "Bezpecnostni specialista";
+    }
 
     public void pridejSpolupracovnika(int idKolegy, UrovenSpoluprace uroven) {
         seznamSpolupracovniku.put(idKolegy, uroven);
@@ -36,58 +41,50 @@ public abstract class Zamestnanec implements Serializable {
 
     public int getPocetSpatnychSpolupraci() {
         int pocet = 0;
-
         for (UrovenSpoluprace uroven : seznamSpolupracovniku.values()) {
             if (uroven == UrovenSpoluprace.SPATNA) {
                 pocet++;
             }
         }
-
         return pocet;
     }
 
     public int getPocetPrumernychSpolupraci() {
         int pocet = 0;
-
         for (UrovenSpoluprace uroven : seznamSpolupracovniku.values()) {
             if (uroven == UrovenSpoluprace.PRUMERNA) {
                 pocet++;
             }
         }
-
         return pocet;
     }
 
     public int getPocetDobrychSpolupraci() {
         int pocet = 0;
-
         for (UrovenSpoluprace uroven : seznamSpolupracovniku.values()) {
             if (uroven == UrovenSpoluprace.DOBRA) {
                 pocet++;
             }
         }
-
         return pocet;
     }
 
     public String getPrevladajiciKvalitaSpoluprace() {
-        int spatna = getPocetSpatnychSpolupraci();
-        int prumerna = getPocetPrumernychSpolupraci();
-        int dobra = getPocetDobrychSpolupraci();
-
         if (seznamSpolupracovniku.isEmpty()) {
             return "zadna";
         }
 
+        int spatna = getPocetSpatnychSpolupraci();
+        int prumerna = getPocetPrumernychSpolupraci();
+        int dobra = getPocetDobrychSpolupraci();
+
         if (spatna >= prumerna && spatna >= dobra) {
             return "spatna";
-        }
-
-        if (prumerna >= spatna && prumerna >= dobra) {
+        } else if (prumerna >= spatna && prumerna >= dobra) {
             return "prumerna";
+        } else {
+            return "dobra";
         }
-
-        return "dobra";
     }
 
     public String getNazevUrovne(UrovenSpoluprace uroven) {
